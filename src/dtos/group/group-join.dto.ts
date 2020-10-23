@@ -1,3 +1,3 @@
 export interface GroupJoinDto {
-  code: string
+  code: string;
 }
