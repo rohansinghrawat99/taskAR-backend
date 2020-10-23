@@ -1,0 +1,25 @@
+{
+  "$async": true,
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "google_id",
+    "name",
+    "email"
+  ],
+  "properties": {
+    "google_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "Email": true
+    },
+    "profile_picture_url": {
+      "type": "string"
+    }
+  }
+}

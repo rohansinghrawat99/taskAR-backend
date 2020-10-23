@@ -1,0 +1,19 @@
+{
+  "$async": true,
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "to_do",
+        "overdue",
+        "under_review"
+      ]
+    }
+  }
+}
