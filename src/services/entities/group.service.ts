@@ -4,7 +4,7 @@ import { GroupCreateDto } from "../../dtos/group/group-create.dto";
 import { Op } from "sequelize";
 import { GroupUser } from "../../models/group-user.model";
 import { User } from "../../models/user.model";
-import { GroupRole } from "../../util/enum.util";
+import { GroupRole, MemberStatus } from "../../util/enum.util";
 
 class GroupService {
     private constructor() {
@@ -31,16 +31,7 @@ class GroupService {
         });
     }
 
-    async showGroupUser(groupId: number, memberId: number): Promise<GroupUser> {
-        return GroupUser.findOne({
-            where: {
-                group_id: groupId,
-                member_id: memberId
-            }
-        });
-    }
-
-    async showGroupMembers(groupId: number): Promise<Group> {
+    async showGroupMembers(groupId: number, status: MemberStatus): Promise<Group> {
         return Group.findOne({
             where: {
                 id: groupId
@@ -48,7 +39,13 @@ class GroupService {
             include: [
                 {
                     model: User,
-                    as: "members"
+                    as: "members",
+                    required: true,
+                    through: {
+                        where: {
+                            status: status
+                        }
+                    }
                 }
             ]
         });
@@ -83,11 +80,12 @@ class GroupService {
         });
     }
 
-    async join(userId: number, groupId: number, role: GroupRole): Promise<GroupUser> {
+    async join(userId: number, groupId: number, role: GroupRole, status: MemberStatus): Promise<GroupUser> {
         return GroupUser.create({
             group_id: groupId,
             member_id: userId,
-            role: role
+            role: role,
+            status: status
         });
     }
 

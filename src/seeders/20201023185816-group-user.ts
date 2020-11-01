@@ -1,6 +1,6 @@
 import { dbService } from "../services/db.service";
 import faker from "faker";
-import { GroupRole } from "../util/enum.util";
+import { GroupRole, MemberStatus } from "../util/enum.util";
 import { groupService } from "../services/entities/group.service";
 import { GroupUser } from "../models/group-user.model";
 
@@ -11,7 +11,8 @@ const groupUsers: any[] = [
     {
         group_id: 1,
         member_id: 1,
-        role: GroupRole.ADMIN
+        role: GroupRole.ADMIN,
+        status: MemberStatus.ACCEPTED
     }
 ];
 
@@ -25,7 +26,8 @@ export = {
             groupUsers.push({
                 group_id: faker.random.arrayElement(groupIds),
                 member_id: 1,
-                role: GroupRole.MEMBER
+                role: GroupRole.MEMBER,
+                status: MemberStatus.PENDING
             });
         }
 

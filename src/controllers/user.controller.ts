@@ -73,7 +73,7 @@ export class UserController {
        return res.json({
            token: jsonwebtoken.sign({
                data: user.id
-           }, ENV_JWT_SECRET, {expiresIn: "1h"}),
+           }, ENV_JWT_SECRET, {expiresIn: "30d"}),
 
            user: await (new UserTransformer().transform(user))
        });
@@ -84,7 +84,7 @@ export class UserController {
        return res.json({
            token: jsonwebtoken.sign({
                data: newUser.id
-           }, ENV_JWT_SECRET, {expiresIn: "1h"}),
+           }, ENV_JWT_SECRET, {expiresIn: "30d"}),
 
            user: await (new UserTransformer().transform(newUser))
        });

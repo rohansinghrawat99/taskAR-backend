@@ -3,7 +3,7 @@ import { GroupUser } from "../../models/group-user.model";
 import { GroupUserCreateDto } from "../../dtos/group-user/group-user-create.dto";
 import { GroupListDto } from "../../dtos/group/group-list.dto";
 import { Op } from "sequelize";
-import { SortOrder } from "../../util/enum.util";
+import { MemberStatus, SortOrder } from "../../util/enum.util";
 import { Group } from "../../models/group.model";
 
 class GroupUserService {
@@ -64,17 +64,39 @@ class GroupUserService {
     });
   }
 
-  async showMembers(id: number): Promise<GroupUser[]> {
+  async showMembers(id: number, status: MemberStatus): Promise<GroupUser[]> {
     return GroupUser.findAll({
       where: {
-        group_id: id
-      }
+        group_id: id,
+        status: status
+      },
+      order: [
+        [
+            "updatedAt",
+            SortOrder.DESC
+        ]
+      ]
     });
   }
 
   async create(data: GroupUserCreateDto): Promise<GroupUser> {
     return GroupUser.create({
       ...data
+    });
+  }
+
+  async showGroupUser(groupId: number, memberId: number): Promise<GroupUser> {
+    return GroupUser.findOne({
+      where: {
+        group_id: groupId,
+        member_id: memberId
+      }
+    });
+  }
+
+  async acceptOrRejectMember(groupUser: GroupUser, status: MemberStatus): Promise<GroupUser> {
+    return groupUser.update({
+      status: status
     });
   }
 }

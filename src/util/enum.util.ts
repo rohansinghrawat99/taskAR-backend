@@ -14,3 +14,9 @@ export enum TaskStatus {
   OVERDUE = "overdue",
   UNDER_REVIEW = "under_review"
 }
+
+export enum MemberStatus {
+  PENDING = "pending",
+  ACCEPTED = "accepted",
+  REJECTED = "rejected"
+}

@@ -1,7 +1,7 @@
 import {
     AutoIncrement, BelongsTo,
     Column,
-    DataType,
+    DataType, Default,
     ForeignKey,
     Model,
     PrimaryKey,
@@ -10,7 +10,7 @@ import {
 } from "sequelize-typescript";
 import { User } from "./user.model";
 import { Group } from "./group.model";
-import { GroupRole } from "../util/enum.util";
+import { GroupRole, MemberStatus } from "../util/enum.util";
 import { Helpers } from "../util/helpers.util";
 
 @Table({
@@ -36,6 +36,10 @@ export class GroupUser extends Model<GroupUser> {
 
     @Column(DataType.ENUM({values: Helpers.iterateEnum<GroupRole>(GroupRole)}))
     role: GroupRole;
+
+    @Default(MemberStatus.PENDING)
+    @Column(DataType.ENUM({values: Helpers.iterateEnum<MemberStatus>(MemberStatus)}))
+    status: MemberStatus;
 
     @BelongsTo(() => User)
     user: User;

@@ -45,6 +45,7 @@ export class GroupUserTransformer extends TransformerAbstract<GroupUser> {
             group_id: groupUser.group_id,
             member_id: groupUser.member_id,
             role: groupUser.role,
+            status: groupUser.status,
             created_at: groupUser.createdAt,
             updated_at: groupUser.updatedAt,
         };

@@ -68,6 +68,7 @@ export enum ApiErrorCode {
     // Group Related
     GROUP_NOT_FOUND = 301,
     MEMBER_ALREADY_EXISTS = 302,
+    USER_NOT_IN_THE_GROUP = 303,
 
     ANNOUNCEMENT_NOT_FOUND,
 

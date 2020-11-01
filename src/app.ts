@@ -16,6 +16,7 @@ import { groupService } from "./services/entities/group.service";
 import { TaskController } from "./controllers/task.controller";
 import moment from "moment";
 import { GroupController } from "./controllers/group.controller";
+import { adminMiddleware } from "./middlewares/admin.middleware";
 
 const compression = require("compression");
 
@@ -28,10 +29,6 @@ export class Application {
         "https://ar-taskers-backend.herokuapp.com/",
         "http://localhost:4200",
         "http://localhost:3000",
-        "https://dev.surfside.devslane.com",
-        "https://stage.surfside.devslane.com",
-        "https://dev.surfsidefoods.work",
-        "https://staging.surfsidefoods.work"
     ];
 
     constructor(port: number) {
@@ -79,14 +76,16 @@ export class Application {
         this.APP.get("/groups/joined", userMiddleware, errorHandler(GroupController.listMyJoinedGroups));
         this.APP.post("/groups", userMiddleware, errorHandler(GroupController.create));
         this.APP.post("/groups/join", userMiddleware, errorHandler(GroupController.join));
-        this.APP.get("/groups/:id([0-9]+)/members", userMiddleware, errorHandler(GroupController.showGroupMembers));
+        this.APP.get("/groups/:id([0-9]+)/accepted-members", userMiddleware, errorHandler(GroupController.showAcceptedGroupMembers));
+        this.APP.get("/groups/:id([0-9]+)/pending-members", [userMiddleware, adminMiddleware], errorHandler(GroupController.showPendingGroupMembers));
+        this.APP.put("/groups/:id([0-9]+)/accept-reject-member", [userMiddleware, adminMiddleware], errorHandler(GroupController.acceptOrRejectGroupMember));
 
         this.APP.all("*", (req: express.Request, res: express.Response) => Helpers.handleError(res, new RouteNotFoundException()));
     }
 
     start(): void {
-        this.APP.listen(process.env.PORT, () => {
-            console.log(`App Started on PORT: ${process.env.PORT}`);
+        this.APP.listen(ENV_APP_PORT_REST, () => {
+            console.log(`App Started on PORT: ${ENV_APP_PORT_REST}`);
         });
     }
 
