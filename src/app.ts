@@ -56,6 +56,7 @@ export class Application {
         this.APP.post("/login", errorHandler(UserController.login));
         // USER APIS
         this.APP.get("/users", userMiddleware, errorHandler(UserController.index));
+        this.APP.get("/me", userMiddleware, errorHandler(UserController.showMe));
         this.APP.get("/users/:id([0-9]+)", userMiddleware, errorHandler(UserController.showById));
         this.APP.put("/users", userMiddleware, errorHandler(UserController.updateUserProfile));
 

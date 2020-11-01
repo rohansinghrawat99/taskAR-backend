@@ -9,94 +9,99 @@ import { ENV_JWT_SECRET } from "../util/secrets.util";
 import { UserUpdateDto } from "../dtos/user/user-update.dto";
 
 export class UserController {
- static async index(req: Request, res: Response) {
-   const users = await userService.index();
+    static async index(req: Request, res: Response) {
+        const users = await userService.index();
 
-   return res.json({
-     data: await (new UserTransformer().transformList(users))
-   });
- }
-
-  static async showById(req: Request, res: Response) {
-   const userId = +req.params.id;
-    const user = await userService.showById(userId);
-
-    if (!user) {
-      throw new UserNotFoundException();
+        return res.json({
+            data: await (new UserTransformer().transformList(users))
+        });
     }
 
-    return res.json({
-      data: await (new UserTransformer().transform(user))
-    });
-  }
-
-  static async showByEmail(req: Request, res: Response) {
-   const email = req.body.email;
-    const user = await userService.showByEmail(email);
-
-    if (!user) {
-      throw new UserNotFoundException();
+    static async showMe(req: Request, res: Response) {
+        return res.json({
+            data: await (new UserTransformer().transform(req.user))
+        });
     }
 
-    return res.json({
-      data: await (new UserTransformer().transform(user))
-    });
-  }
+    static async showById(req: Request, res: Response) {
+        const userId = +req.params.id;
+        const user = await userService.showById(userId);
 
-  static async signUp(req: Request, res: Response) {
-   const inputData = req.body as UserCreateDto;
+        if (!user) {
+            throw new UserNotFoundException();
+        }
 
-   // try {
-   //   await (new UserCreateValidator().validate(inputData));
-   // }
-   // catch (e) {
-   //   throw new UnprocessableEntityException(e);
-   // }
+        return res.json({
+            data: await (new UserTransformer().transform(user))
+        });
+    }
 
-   const user = await userService.showByEmail(inputData.email);
+    static async showByEmail(req: Request, res: Response) {
+        const email = req.body.email;
+        const user = await userService.showByEmail(email);
 
-   if (user) {
-     throw new UserAlreadyExistsException();
-   }
+        if (!user) {
+            throw new UserNotFoundException();
+        }
 
-   const newUser = await userService.create(inputData);
+        return res.json({
+            data: await (new UserTransformer().transform(user))
+        });
+    }
 
-   return res.json({
-     data: await (new UserTransformer().transform(newUser))
-   });
-  }
+    static async signUp(req: Request, res: Response) {
+        const inputData = req.body as UserCreateDto;
 
-  static async login(req: Request, res: Response) {
-   const inputData  = req.body as UserCreateDto;
-   const user = await userService.showByGoogleId(inputData.google_id);
-   if (user) {
-       return res.json({
-           token: jsonwebtoken.sign({
-               data: user.id
-           }, ENV_JWT_SECRET, {expiresIn: "30d"}),
+        // try {
+        //   await (new UserCreateValidator().validate(inputData));
+        // }
+        // catch (e) {
+        //   throw new UnprocessableEntityException(e);
+        // }
 
-           user: await (new UserTransformer().transform(user))
-       });
-   }
-   else {
-       const newUser = await userService.create(inputData);
+        const user = await userService.showByEmail(inputData.email);
 
-       return res.json({
-           token: jsonwebtoken.sign({
-               data: newUser.id
-           }, ENV_JWT_SECRET, {expiresIn: "30d"}),
+        if (user) {
+            throw new UserAlreadyExistsException();
+        }
 
-           user: await (new UserTransformer().transform(newUser))
-       });
-   }
-  }
+        const newUser = await userService.create(inputData);
 
-  static async updateUserProfile(req: Request, res: Response) {
-     const inputData = req.body as UserUpdateDto;
-     const user = req.user;
-     const updatedUser = await userService.update(user, inputData);
-     return res.json({
-         data: await (new UserTransformer().transform(updatedUser))
-     });
-  }
+        return res.json({
+            data: await (new UserTransformer().transform(newUser))
+        });
+    }
+
+    static async login(req: Request, res: Response) {
+        const inputData = req.body as UserCreateDto;
+        const user = await userService.showByGoogleId(inputData.google_id);
+        if (user) {
+            return res.json({
+                token: jsonwebtoken.sign({
+                    data: user.id
+                }, ENV_JWT_SECRET, {expiresIn: "30d"}),
+
+                user: await (new UserTransformer().transform(user))
+            });
+        } else {
+            const newUser = await userService.create(inputData);
+
+            return res.json({
+                token: jsonwebtoken.sign({
+                    data: newUser.id
+                }, ENV_JWT_SECRET, {expiresIn: "30d"}),
+
+                user: await (new UserTransformer().transform(newUser))
+            });
+        }
+    }
+
+    static async updateUserProfile(req: Request, res: Response) {
+        const inputData = req.body as UserUpdateDto;
+        const user = req.user;
+        const updatedUser = await userService.update(user, inputData);
+        return res.json({
+            data: await (new UserTransformer().transform(updatedUser))
+        });
+    }
 }
