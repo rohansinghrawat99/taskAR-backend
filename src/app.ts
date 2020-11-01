@@ -84,8 +84,8 @@ export class Application {
     }
 
     start(): void {
-        this.APP.listen(ENV_APP_PORT_REST, () => {
-            console.log(`App Started on PORT: ${ENV_APP_PORT_REST}`);
+        this.APP.listen(process.env.PORT, () => {
+            console.log(`App Started on PORT: ${process.env.PORT}`);
         });
     }
 
