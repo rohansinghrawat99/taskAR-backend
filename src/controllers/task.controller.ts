@@ -8,6 +8,8 @@ import { GroupNotFoundException } from "../exceptions/group/group-not-found.exce
 import { TaskUpdateDto } from "../dtos/task/task-update.dto";
 import { TaskCreateDto } from "../dtos/task/task-create.dto";
 import { CannotEditTaskException } from "../exceptions/tasks/cannot-edit-task.exception";
+import { userService } from "../services/entities/user.service";
+import { UserNotFoundException } from "../exceptions/user/user-not-found.exception";
 
 export class TaskController {
     static async listPersonalToDo(req: Request, res: Response) {
@@ -124,6 +126,10 @@ export class TaskController {
 
     static async create(req: Request, res: Response) {
         const inputData = req.body as TaskCreateDto;
+        const user = await userService.showById(inputData.assigned_to_id);
+        if (!user) {
+            throw new UserNotFoundException;
+        }
         const task = await taskService.create(inputData, req.user.id);
         return res.json({
             data: await (new TaskTransformer().transform(task))

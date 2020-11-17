@@ -49,6 +49,7 @@ class TaskService {
     async create(data: TaskCreateDto, userId: number): Promise<Task> {
         return Task.create({
             ...data,
+            status: TaskStatus.TO_DO,
             creator_id: userId
         });
     }
