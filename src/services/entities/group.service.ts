@@ -4,7 +4,7 @@ import { GroupCreateDto } from "../../dtos/group/group-create.dto";
 import { Op } from "sequelize";
 import { GroupUser } from "../../models/group-user.model";
 import { User } from "../../models/user.model";
-import { GroupRole, MemberStatus } from "../../util/enum.util";
+import { GroupRole, MemberStatus, SortOrder } from "../../util/enum.util";
 
 class GroupService {
     private constructor() {
@@ -55,7 +55,12 @@ class GroupService {
         return Group.findAll({
             where: {
                 admin_id: userId
-            }
+            },
+            order: [
+                [
+                    "name", SortOrder.DESC
+                ]
+            ]
         });
     }
 
@@ -66,6 +71,11 @@ class GroupService {
                     [Op.ne]: userId
                 }
             },
+            order: [
+                [
+                    "name", SortOrder.DESC
+                ]
+            ],
             include: [
                 {
                     model: User,

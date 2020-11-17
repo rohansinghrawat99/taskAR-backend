@@ -1,6 +1,6 @@
 import logger from "../../util/logger.util";
 import { Task } from "../../models/task.model";
-import { TaskStatus } from "../../util/enum.util";
+import { SortOrder, TaskStatus } from "../../util/enum.util";
 import { TaskCreateDto } from "../../dtos/task/task-create.dto";
 import { TaskUpdateDto } from "../../dtos/task/task-update.dto";
 
@@ -20,7 +20,12 @@ class TaskService {
                 group_id: null,
                 creator_id: userId,
                 status: status
-            }
+            },
+            order: [
+                [
+                    "due_time", SortOrder.DESC
+                ]
+            ]
         });
     }
 
@@ -30,7 +35,12 @@ class TaskService {
                 group_id: groupId,
                 assigned_to_id: userId ? userId : null,
                 status: status
-            }
+            },
+            order: [
+                [
+                    "due_time", SortOrder.DESC
+                ]
+            ]
         });
     }
 
@@ -38,7 +48,12 @@ class TaskService {
         return Task.findAll({
             where: {
                 group_id: groupId,
-            }
+            },
+            order: [
+                [
+                    "due_time", SortOrder.DESC
+                ]
+            ]
         });
     }
 
